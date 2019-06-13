@@ -2,7 +2,7 @@
 # @Author: Andre Ricardo Goncalves
 # @Date:   2018-04-24 16:05:40
 # @Last Modified by:   Andre Goncalves
-# @Last Modified time: 2019-05-29 14:45:29
+# @Last Modified time: 2019-06-13 13:30:45
 import sys
 sys.path.append('..')
 from methods.regressor.mtl.MSSLRegressor import MSSLRegressor

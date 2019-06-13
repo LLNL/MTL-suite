@@ -33,92 +33,6 @@ THE_LOWER_THE_BETTER = {'rmse', 'nmse', 'rmse_survival', 'mse_survival', 'brier_
 MAX_REL_IMPROVEMENT = 250
 
 
-# class Method(object):
-#     """
-#     Abstract class representing a generic Method.
-#     Attributes:
-
-#     """
-
-#     __metaclass__ = ABCMeta
-
-#     def __init__(self, name, paradigm): #, full_name):
-#         """
-#         Class initialization.
-#         Args
-#             name (str): name to be used as reference
-#         """
-#         self.name = name
-#         # self.full_name = full_name
-#         self.paradigm = paradigm
-#         self.logger = Logger()
-
-#     def __str__(self):
-#         # print('self.full_name: {} '.format(self.full_name))
-#         return self.name
-#         # pars = self.get_params()
-#         # if pars is not None:
-#         #     pars_list = list()
-#         #     for k in pars.keys():
-#         #         value = '{0:.3f}'.format(pars[k])
-#         #         pars_list.append('{}={}'.format(str(k), value))
-#         #     # ref = '.'.join(['{}={}'.format(str(k), pars[k]) for k in pars.keys()])
-#         #     ref = '.'.join(pars_list)
-#         #     ref = ref.replace('_', '').replace('.', '_')
-#         # return '{}_{}'.format(self.name, ref)
-
-#     @abstractmethod
-#     def fit(self):
-#         """
-#         Train method's parameters.
-#         Args
-#             name (np.array()):
-#         """
-#         pass
-
-#     @abstractmethod
-#     def predict(self):
-#         """
-#         Perform prediction.
-#         Args
-#             name (np.array()):
-#         Return
-#             name (np.array()):
-#         """
-#         pass
-
-#     @abstractmethod
-#     def evaluate(self):
-#         """
-#         Perform prediction.
-#         Args
-#             name (np.array()):
-#         Return
-#             name (np.array()):
-#         """
-#         pass
-
-# #    @abstractmethod
-#     def hyperparameters_selection(self):
-#         """
-#         Systematically performs method's hyper-parameters selection.
-#         Args
-#             name (np.array()):
-#         Return
-#             name (np.array()):
-#         """
-#         pass
-
-#     @abstractmethod
-#     def set_params(self):
-#         """
-#         Set method's parameters.
-#         Args
-#             name (np.array()):
-#         """
-#         pass
-
-
 class DatasetMTL(object):
     """ """
     __metaclass__ = ABCMeta
@@ -506,16 +420,6 @@ class ModelTraining(object):
     def generate_report(self):
         # read results from experiment folder and store it into a dataframe
         df, op_dict = self.__read_experiment_results()
-#        met_names = list()
-#        uniq_methods = df['Methods'].unique()
-#        for met_i in uniq_methods:
-#            old_name = met_i.split('_')[0]
-#            new_name = ''.join([c for c in old_name if c.isupper()])
-#            exist = [ith for ith in met_names if ith.split('-')[0] == new_name]
-#            if len(exist) > 0:
-#                new_name += '-%d' % (len(exist)+1)
-#            met_names.append(new_name)
-#            df.loc[df["Methods"] == met_i, 'Methods'] = new_name
 
         # save results table into latex format
         txt_filename = os.path.join(config.path_to_output,
@@ -849,7 +753,7 @@ class ModelTraining(object):
                                                  op_dict[run][method][task]['obs'],
                                                  censor_flag=op_dict[run][method][task]['censor_flag'],
                                                  survival_time=op_dict[run][method][task]['svv_time'])
-                    perform.append([metric, task, run, method, v/len(tasks)])
+                    perform.append([metric, task, run, method, v / len(tasks)])
 
             column_names = ['Metric', 'Task', 'Run', 'Method', 'Value']
             df_perf = pd.DataFrame(perform, columns=column_names)
@@ -865,8 +769,10 @@ class ModelTraining(object):
                     g.set_axis_labels("", metric_map[metric])
                 else:
                     g.set_axis_labels("", metric)
-            g.fig.set_size_inches(6, 4)
-            # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            g.fig.set_size_inches(8, 4)
+            if metric in THE_HIGHER_THE_BETTER:
+                plt.ylim([0, 1])
+
             plt.tight_layout()
             pdf.savefig(g.fig)
             plt.clf()

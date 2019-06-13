@@ -2,7 +2,7 @@
 # @Author: Andre Ricardo Goncalves
 # @Date:   2018-10-22 13:29:43
 # @Last Modified by:   Andre Goncalves
-# @Last Modified time: 2019-05-29 16:47:11
+# @Last Modified time: 2019-06-13 13:32:37
 import sys
 sys.path.append('../')
 from methods.classifier.mtl.MSSLClassifier import MSSLClassifier
@@ -33,13 +33,13 @@ if __name__ == '__main__':
     # list of methods to compare against
     # note that the same method can be called many times just using
     # different hyper-parameter values
-    methods = [PooledLogisticClassifier(alpha_l1=0.05, name='Pooled'),
+    methods = [PooledLogisticClassifier(alpha_l1=0.05, name='Pooled-LogReg'),
                MSSLClassifier(lambda_1=0.01, lambda_2=0.01, name='MSSL'),
-               LogisticClassifier(alpha_l1=0.02, name='STL'),
+               LogisticClassifier(alpha_l1=0.02, name='LogReg-STL'),
                JFSMTLClassifier(rho_L21=0.1, rho_L2=0, name='JFSMTL'),
-               PooledRandomForestClassifier(),
-               RandomForestClassifier(),
-               GradientBoostingClassifier()]
+               PooledRandomForestClassifier(n_estimators=100, name='Pooled-RF'),
+               RandomForestClassifier(n_estimators=100, name='RF-STL'),
+               GradientBoostingClassifier(n_estimators=100, name='GBC-STL')]
 
     # list of metrics to measure method's performance
     # see list of available metrics in utils/performance_metrics.py
@@ -47,5 +47,5 @@ if __name__ == '__main__':
 
     exp_folder = __file__.strip('.py')
     exp = ModelTraining(exp_folder)
-    exp.execute(dataset, methods, metrics, nb_runs=10)
+    exp.execute(dataset, methods, metrics, nb_runs=3)
     exp.generate_report()
