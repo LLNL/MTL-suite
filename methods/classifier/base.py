@@ -84,6 +84,15 @@ class BaseMTLEstimator(BaseEstimator):
 
     def fit(self, x, y, **kwargs):
         """ fit model parameters """
+
+        # check if all tasks have the same dimensions
+        for k in range(len(x)):
+            assert x[k].shape[0] == y[k].shape[0]
+            for k2 in range(len(x)):
+                msg = ("Dimensions of x[%d] & x[%d] doesnt match: %d - %d" %
+                       (k, k2, x[k].shape[1], x[k2].shape[1]))
+                assert x[k].shape[1] == x[k2].shape[1], msg
+
         self.nb_tasks = len(x)  # get number of tasks
         self.nb_dims = x[0].shape[1]  # dimension of the data
         if self.fit_intercept:
